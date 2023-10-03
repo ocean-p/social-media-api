@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.socialmedia.dto.UserDto;
@@ -16,6 +17,9 @@ public class UserService implements IUserService{
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   @Override
   public User registerUser(User user) throws UserException {
@@ -31,7 +35,7 @@ public class UserService implements IUserService{
 
     User newUser = new User();
     newUser.setUsername(user.getUsername());
-    newUser.setPassword(user.getPassword());
+    newUser.setPassword(passwordEncoder.encode(user.getPassword()));
     newUser.setName(user.getName());
     newUser.setEmail(user.getEmail());
 
