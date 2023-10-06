@@ -20,7 +20,7 @@ import com.example.socialmedia.response.MessageResponse;
 import com.example.socialmedia.service.IUserService;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
   @Autowired
   private IUserService userService;
@@ -67,7 +67,7 @@ public class UserController {
     return new ResponseEntity<List<User>>(users, HttpStatus.OK);
   }
 
-  @PutMapping("/update")
+  @PutMapping("/")
   public ResponseEntity<MessageResponse> updateUser(
     @RequestHeader("Authorization") String token,
     @RequestBody User user

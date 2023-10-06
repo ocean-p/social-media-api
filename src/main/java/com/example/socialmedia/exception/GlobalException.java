@@ -22,6 +22,16 @@ public class GlobalException {
     return new ResponseEntity<ErrorDetail>(err, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(PostException.class)
+  public ResponseEntity<ErrorDetail> handlePostException(
+    PostException ex, WebRequest req
+  ){
+    ErrorDetail err =  new ErrorDetail(
+      ex.getMessage(), req.getDescription(false), LocalDateTime.now());
+
+    return new ResponseEntity<ErrorDetail>(err, HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorDetail> handleMethodException(
     MethodArgumentNotValidException ex

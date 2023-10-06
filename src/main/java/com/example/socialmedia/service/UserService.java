@@ -11,6 +11,8 @@ import com.example.socialmedia.dto.UserDto;
 import com.example.socialmedia.exception.UserException;
 import com.example.socialmedia.model.User;
 import com.example.socialmedia.repository.UserRepository;
+import com.example.socialmedia.security.JwtTokenClaims;
+import com.example.socialmedia.security.JwtTokenProvider;
 
 @Service
 public class UserService implements IUserService{
@@ -20,6 +22,9 @@ public class UserService implements IUserService{
 
   @Autowired
   private PasswordEncoder passwordEncoder;
+
+  @Autowired
+  private JwtTokenProvider jwtTokenProvider;
 
   @Override
   public User registerUser(User user) throws UserException {
@@ -52,8 +57,14 @@ public class UserService implements IUserService{
 
   @Override
   public User findUserProfile(String token) throws UserException {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findUserProfile'");
+    token = token.substring(7);
+    JwtTokenClaims jwtTokenClaims = jwtTokenProvider.getClaimsFromToken(token);
+    String username = jwtTokenClaims.getUsername();
+    Optional<User> opt = userRepository.findByUsername(username);
+    if(opt.isPresent()){
+      return opt.get();
+    }
+    throw new UserException("Invalid Token!");
   }
 
   @Override
