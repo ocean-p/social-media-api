@@ -38,20 +38,35 @@ public class UserController {
   }
 
   @PutMapping("follow/{userId}")
-  public ResponseEntity<MessageResponse> followUser(@PathVariable long userId){
-    return null;
+  public ResponseEntity<MessageResponse> followUser(
+    @PathVariable long userId,
+    @RequestHeader("Authorization") String token
+  ) throws UserException{
+    User user = userService.findUserProfile(token);
+    String message = userService.followUser(user.getId(), userId);
+
+    MessageResponse res = new MessageResponse(message);
+    return new ResponseEntity<MessageResponse>(res, HttpStatus.OK);
   }
 
   @PutMapping("unfollow/{userId}")
-  public ResponseEntity<MessageResponse> unfollowUser(@PathVariable long userId){
-    return null;
+  public ResponseEntity<MessageResponse> unfollowUser(
+    @PathVariable long userId,
+    @RequestHeader("Authorization") String token
+  ) throws UserException{
+    User user = userService.findUserProfile(token);
+    String message = userService.unfollowUser(user.getId(), userId);
+
+    MessageResponse res = new MessageResponse(message);
+    return new ResponseEntity<MessageResponse>(res, HttpStatus.OK);
   }
 
-  @PutMapping("/req")
-  public ResponseEntity<MessageResponse> findUserProfile(
+  @GetMapping("/profile")
+  public ResponseEntity<User> findUserProfile(
     @RequestHeader("Authorization") String token
-  ){
-    return null;
+  ) throws UserException{
+    User user = userService.findUserProfile(token);
+    return new ResponseEntity<User>(user, HttpStatus.OK);
   }
 
   @GetMapping("/{userIds}")
@@ -67,11 +82,14 @@ public class UserController {
     return new ResponseEntity<List<User>>(users, HttpStatus.OK);
   }
 
-  @PutMapping("/")
-  public ResponseEntity<MessageResponse> updateUser(
+  @PutMapping("/update")
+  public ResponseEntity<User> updateUser(
     @RequestHeader("Authorization") String token,
     @RequestBody User user
-  ){
-    return null;
+  ) throws UserException{
+    User reqUser = userService.findUserProfile(token);
+    User updatedUser = userService.updateUserDetail(user, reqUser);
+
+    return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
   }
 }
