@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import com.example.socialmedia.model.User;
 import com.example.socialmedia.repository.UserRepository;
 import com.example.socialmedia.service.IUserService;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/")
 public class AuthController {
@@ -36,7 +38,7 @@ public class AuthController {
   public ResponseEntity<User> login(Authentication auth) throws BadCredentialsException{
     Optional<User> opt = userRepository.findByUsername(auth.getName());
     if(opt.isPresent())
-      return new ResponseEntity<User>(opt.get(), HttpStatus.ACCEPTED);
+      return new ResponseEntity<User>(opt.get(), HttpStatus.OK);
 
     throw new BadCredentialsException("invalid username and password");
   }
